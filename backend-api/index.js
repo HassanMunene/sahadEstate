@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import connectDB from './db/connect.js';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
+import errorMiddleware from './middleware/error.middleware.js';
 
 const app = express()
 dotenv.config()
@@ -16,6 +17,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter);
+
+app.use(errorMiddleware);
 
 try {
     // first connect application to the db
