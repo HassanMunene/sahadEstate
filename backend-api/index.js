@@ -1,20 +1,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import mongoose from "mongoose";
+import connectDB from './db/connect.js';
+import userRouter from './routes/user.route.js';
+import authRouter from './routes/auth.route.js';
 
 const app = express()
 dotenv.config()
 const port = process.env.PORT || 5000
 
-/*
-========================
-database connections
-========================
-*/
-const connectDB = async (uri) => {
-    console.log('connecting to the database...')
-    return mongoose.connect(uri);
-}
+app.use(express.json())
+
+app.get('/', (req, res) => {
+    res.send('Hello mate');
+})
+
+app.use('/api/user', userRouter)
+app.use('/api/auth', authRouter);
 
 try {
     // first connect application to the db

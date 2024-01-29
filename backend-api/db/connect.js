@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const connectDB = async (uri) => {
+    console.log('connecting to the database...')
     return mongoose.connect(uri);
 }
-
-module.exports = connectDB;
+export default connectDB;
