@@ -1,6 +1,8 @@
 const SignUp = () => {
     return (
-        <h1>This is the sign up page pal</h1>
+        <div>
+            <h1 className="text-center text-3xl font-semibold my-7">Join Us</h1>
+        </div>
     )
 }
 

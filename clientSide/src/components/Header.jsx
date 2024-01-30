@@ -1,7 +1,7 @@
 import { FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Header = (props) => {
     return (
         <header className="bg-slate-200 shadow-md">
             <div className="flex justify-between items-center max-w-6xl max-auto p-3">
@@ -21,6 +21,7 @@ const Header = () => {
                     <Link to='/'><li className='text-slate-700 hover:underline cursor-pointer hidden sm:inline'>Home</li></Link>
                     <Link to='/about'><li className='text-slate-700 hover:underline cursor-pointer hidden sm:inline'>About</li></Link>
                     <Link to='/sign-in'><li className='text-slate-700 hover:underline cursor-pointer'>Sign in</li></Link>
+                    <button onClick={props.openSignUpModal} className='cursor-pointer'>Sing up</button>
                 </ul>
             </div>
         </header>
