@@ -8,6 +8,8 @@ Modal.setAppElement('#root'); //accessibility purposes
 
 const SignInModal = (props) => {
     const [formData, setFormData] = useState({email: '', password: ''});
+    // have a useState to handle errors
+    const [error, setError] = useState(null);
 
     const handleChange = (event) => {
         const inputElement = event.target;
@@ -32,6 +34,10 @@ const SignInModal = (props) => {
             props.onClose();
         } catch (error) {
             console.error('Error', error.message);
+            setError(error.message);
+            setTimeout(() =>{
+                setError(null);
+            }, 2000);
         }
     }
 
@@ -75,8 +81,9 @@ const SignInModal = (props) => {
                         </button>
                     </form>
                     <div className="mt-5">
-                        <p>Don't have an account? <button onClick={handleSignUpModal} className="text-green-700 cursor-pointer">Sign up</button></p>
+                        <p>Dont have an account? <button onClick={handleSignUpModal} className="text-green-700 cursor-pointer">Sign up</button></p>
                     </div>
+                    {error && <div className='bg-red-600 rounded-md p-3 mt-3'><p className='text-white'>Invalid email or password</p></div>}
                 </div>
             </div>
         </Modal>
