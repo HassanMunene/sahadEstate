@@ -7,6 +7,8 @@ Modal.setAppElement('#root') //this is for accessibiltiy purposes for screen rea
 
 const SignUpModal = (props) => {
     const [formData, setFormData] = useState({ username:'', email:'', password:'',});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleChange = (event) => {
         const inputElement = event.target;
@@ -21,6 +23,7 @@ const SignUpModal = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true);
         try {
             const response = await axios.post('/api/auth/signup', JSON.stringify(formData), {
                 headers: {
@@ -29,11 +32,15 @@ const SignUpModal = (props) => {
             });
             //const data = await response.json();
             console.log(response.data);
+            // then close the modal
+            props.onClose();
         } catch (error) {
-            console.error('Error sending data to backend:', error);
+            console.error('Error sending data to backend:', error.message);
+            setError(error.message);
+            setLoading(false);
         }
-        // then close the modal
-        props.onClose();
+        setLoading(false);
+        setError(null);
     }
 
     return (
@@ -71,11 +78,14 @@ const SignUpModal = (props) => {
                             placeholder="password"
                             className="border p-3 rounded-lg"
                         />
-                        <button type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">Sign Up</button>
+                        <button disabled={loading} type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
+                            {loading ? 'Loading...': 'Sign up'}
+                        </button>
                     </form>
                     <div className="mt-5">
                         <p>Have an account? <span className="text-green-700 cursor-pointer">Sign in</span></p>
                     </div>
+                    {error && <p className="text-red-500 mt-5">{error}</p>}
                 </div>
             </div>
         </Modal>
