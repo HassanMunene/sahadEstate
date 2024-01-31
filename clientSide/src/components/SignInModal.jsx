@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Modal from 'react-modal';
@@ -18,9 +19,20 @@ const SignInModal = (props) => {
         });
     }
     
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // handle submition
+        // handle submition of the details for authorisation
+        try {
+            const response = await axios.post('/api/auth/signin', JSON.stringify(formData), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response.data);
+            props.onClose();
+        } catch (error) {
+            console.error('Error', error.message);
+        }
     }
 
     // here if user does not have an account and they want to register then we refer
