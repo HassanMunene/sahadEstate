@@ -10,6 +10,7 @@ const SignUpModal = (props) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // handle change of input elements as user enters details
     const handleChange = (event) => {
         const inputElement = event.target;
         //console.log(inputElement.name);
@@ -23,6 +24,7 @@ const SignUpModal = (props) => {
         });
     }
 
+    // handle the submission of user details when user clicks submit
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
@@ -35,14 +37,22 @@ const SignUpModal = (props) => {
             //const data = await response.json();
             console.log(response.data);
             // then close the modal
-            props.onClose();
+            props.onClose({success: true, msg: response.data.msg});
         } catch (error) {
             console.error('Error sending data to backend:', error.message);
             setError(error.message);
             setLoading(false);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
         setError(null);
+    }
+
+    // here when the user clicks the sign in btn because they alraedy have an account
+    // this should handle it. it will call the openSignIn() props function back to parent
+    const handleSignInModal = () => {
+        console.log('button clicked');
+        props.openSignIn();
     }
 
     return (
@@ -85,7 +95,7 @@ const SignUpModal = (props) => {
                         </button>
                     </form>
                     <div className="mt-5">
-                        <p>Have an account? <span className="text-green-700 cursor-pointer">Sign in</span></p>
+                        <p>Have an account? <button onClick={handleSignInModal} className="text-green-700 cursor-pointer">Sign in</button></p>
                     </div>
                     {error && <p className="text-red-500 mt-5">{error}</p>}
                 </div>
