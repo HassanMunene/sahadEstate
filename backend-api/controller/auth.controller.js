@@ -37,9 +37,12 @@ export const signInUser = async (req, res, next) => {
         // if the user password is valid, create a jwt token that will be stored in a cookie
         // to authenticate the user every time the make a special request.
         const token = jwt.sign({id: validUser._id}, process.env.JWT_SECRET_KEY);
+        
+        // destructure the validUser to omit the password so that we dont send it back to client
+        const {password: pass, ...restInfo} = validUser.toObject();
 
-        // then create a cookie
-        res.cookie('access_token', token, {httpOnly: true}).status(200).json({validUser});
+        // then create a cookie and send response
+        res.cookie('access_token', token, {httpOnly: true}).status(200).json({restInfo});
 
     } catch (error) {
         next(error);
