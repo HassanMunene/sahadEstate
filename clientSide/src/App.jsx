@@ -1,28 +1,34 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import SignIn from "./pages/SignIn"
-import SignUp from "./pages/SignUp"
 import About from "./pages/About"
 import Profile from "./pages/Profile"
 import Header from "./components/Header"
 import SignUpModal from "./components/SignUpModal";
 import { useState } from "react"
+import SignInModal from "./components/SignInModal"
 
 const App = () => {
   const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
+  const [isSignInModalOpen, setSignInModalOpen] = useState(false);
+
   const openSignUpModal = () => setSignUpModalOpen(true);
   const closeSignUpModal = () => setSignUpModalOpen(false);
+
+  const openSignInModal = () => setSignInModalOpen(true);
+  const closeSignInModal = () => setSignInModalOpen(false);
+
   return (
     <BrowserRouter>
-    <Header openSignUpModal={openSignUpModal} />
+    <Header openSignUpModal={openSignUpModal} openSignInModal={openSignInModal}/>
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="/sign-in" element={<SignIn />}/>
-      <Route path="/sign-up" element={<SignUp />} />
       <Route path="/about" element={<About />} />
       <Route path="/profile" element={<Profile />}/>
     </Routes>
     <SignUpModal isOpen={isSignUpModalOpen} onClose={closeSignUpModal}/>
+    <SignInModal isOpen={isSignInModalOpen} onClose={closeSignInModal}/>
     </BrowserRouter>
   )
 }

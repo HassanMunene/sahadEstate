@@ -16,7 +16,9 @@ const SignUpModal = (props) => {
 
         setFormData((prevData) => {
             const newData = {...prevData};
+            //console.log(typeof(newData));
             newData[inputElement.name] = inputElement.value;
+            //console.log(newData)
             return newData;
         });
     }

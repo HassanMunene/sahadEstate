@@ -20,7 +20,7 @@ const Header = (props) => {
                 <ul className='flex gap-4'>
                     <Link to='/'><li className='text-slate-700 hover:underline cursor-pointer hidden sm:inline'>Home</li></Link>
                     <Link to='/about'><li className='text-slate-700 hover:underline cursor-pointer hidden sm:inline'>About</li></Link>
-                    <Link to='/sign-in'><li className='text-slate-700 hover:underline cursor-pointer'>Sign in</li></Link>
+                    <button onClick={props.openSignInModal} className='cursor-pointer'>Sign in</button>
                     <button onClick={props.openSignUpModal} className='cursor-pointer'>Sing up</button>
                 </ul>
             </div>
