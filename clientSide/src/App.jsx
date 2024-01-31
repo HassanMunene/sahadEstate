@@ -13,7 +13,15 @@ const App = () => {
   const [isSignInModalOpen, setSignInModalOpen] = useState(false);
 
   const openSignUpModal = () => setSignUpModalOpen(true);
-  const closeSignUpModal = () => setSignUpModalOpen(false);
+  const closeSignUpModal = (data) => {
+    console.log(data);
+    if (data.success === true) {
+      setSignUpModalOpen(false);
+      setSignInModalOpen(true);
+    } else {
+      return setSignUpModalOpen(true)
+    }
+  };
 
   const openSignInModal = () => setSignInModalOpen(true);
   const closeSignInModal = () => setSignInModalOpen(false);
