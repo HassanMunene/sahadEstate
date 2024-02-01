@@ -2,14 +2,21 @@ import axios from 'axios';
 import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Modal from 'react-modal';
+import { useSelector, useDispatch } from "react-redux";
+import { startSignIn, successSignIn, failureSignIn } from '../redux/user/userSlice';
 
 
 Modal.setAppElement('#root'); //accessibility purposes
 
 const SignInModal = (props) => {
+    const loading = useSelector((state) => state.user.loading);
+    const error = useSelector((state) => state.user.error);
     const [formData, setFormData] = useState({email: '', password: ''});
+    const dispatch = useDispatch();
+
     // have a useState to handle errors
-    const [error, setError] = useState(null);
+    //const [error, setError] = useState(null);
+    //const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         const inputElement = event.target;
@@ -24,20 +31,29 @@ const SignInModal = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         // handle submition of the details for authorisation
+        dispatch(startSignIn);
         try {
             const response = await axios.post('/api/auth/signin', JSON.stringify(formData), {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            console.log(response.data);
+            // get the user returned from the response to store it in redux for later use
+            const userInfo = response.data.restInfo;
+            //console.log(response.data);
+            dispatch(successSignIn(userInfo));
             props.onClose();
         } catch (error) {
             console.error('Error', error.message);
-            setError(error.message);
-            setTimeout(() =>{
-                setError(null);
-            }, 2000);
+            dispatch(failureSignIn(error.message))
+            //setError(error.message);
+            //setLoading(false);
+            // setTimeout(() =>{
+            //     setError(null);
+            // }, 2500);
+        } finally {
+            dispatch(startSignIn);
+            //setLoading(false);
         }
     }
 
@@ -76,8 +92,8 @@ const SignInModal = (props) => {
                             placeholder='Password' 
                             id='password'
                         />
-                        <button type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
-                            sign in
+                        <button disabled={loading} type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
+                            {loading ? 'Loading...': 'sign in'}
                         </button>
                     </form>
                     <div className="mt-5">

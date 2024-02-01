@@ -39,13 +39,16 @@ const SignUpModal = (props) => {
             // then close the modal
             props.onClose({success: true, msg: response.data.msg});
         } catch (error) {
-            console.error('Error sending data to backend:', error.message);
+            console.error(error.message);
             setError(error.message);
             setLoading(false);
+            // this timeout will enable error message to be displayed for a period of time
+            setTimeout(() => {
+                setError(false);
+            }, 2500)
         } finally {
             setLoading(false);
         }
-        setError(null);
     }
 
     // here when the user clicks the sign in btn because they alraedy have an account
@@ -97,7 +100,7 @@ const SignUpModal = (props) => {
                     <div className="mt-5">
                         <p>Have an account? <button onClick={handleSignInModal} className="text-green-700 cursor-pointer">Sign in</button></p>
                     </div>
-                    {error && <p className="text-red-500 mt-5">{error}</p>}
+                    {error && <div className='bg-red-600 rounded-md p-3 mt-3'><p className='text-white'>Error registering user</p></div>}
                 </div>
             </div>
         </Modal>
