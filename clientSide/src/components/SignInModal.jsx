@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Modal from 'react-modal';
 import { useSelector, useDispatch } from "react-redux";
-import { startSignIn, successSignIn, failureSignIn } from '../redux/user/userSlice';
+import { startSignIn, successSignIn, failureSignIn, clearError, clearLoading } from '../redux/user/userSlice';
 
 
 Modal.setAppElement('#root'); //accessibility purposes
@@ -13,10 +13,6 @@ const SignInModal = (props) => {
     const error = useSelector((state) => state.user.error);
     const [formData, setFormData] = useState({email: '', password: ''});
     const dispatch = useDispatch();
-
-    // have a useState to handle errors
-    //const [error, setError] = useState(null);
-    //const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         const inputElement = event.target;
@@ -46,15 +42,11 @@ const SignInModal = (props) => {
         } catch (error) {
             console.error('Error', error.message);
             dispatch(failureSignIn(error.message))
-            //setError(error.message);
-            //setLoading(false);
-            // setTimeout(() =>{
-            //     setError(null);
-            // }, 2500);
-        } finally {
-            dispatch(startSignIn);
-            //setLoading(false);
+            setTimeout(() =>{
+                dispatch(clearError());
+            }, 2500);
         }
+        dispatch(clearLoading());
     }
 
     // here if user does not have an account and they want to register then we refer

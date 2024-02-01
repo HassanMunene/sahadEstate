@@ -2,13 +2,17 @@ import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import Modal from 'react-modal';
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { clearError, clearLoading, failureSignUp, startSignUp, successSignUp } from "../redux/user/userSlice";
 
 Modal.setAppElement('#root') //this is for accessibiltiy purposes for screen readers
 
 const SignUpModal = (props) => {
     const [formData, setFormData] = useState({ username:'', email:'', password:'',});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const loading = useSelector((state) => state.user.loading);
+    const error = useSelector((state) => state.user.error);
+
+    const dispatch = useDispatch();
 
     // handle change of input elements as user enters details
     const handleChange = (event) => {
@@ -27,28 +31,28 @@ const SignUpModal = (props) => {
     // handle the submission of user details when user clicks submit
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
+        console.log(loading)
+        dispatch(startSignUp());
+        console.log('after sign up', loading)
+
         try {
             const response = await axios.post('/api/auth/signup', JSON.stringify(formData), {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            //const data = await response.json();
             console.log(response.data);
             // then close the modal
             props.onClose({success: true, msg: response.data.msg});
         } catch (error) {
             console.error(error.message);
-            setError(error.message);
-            setLoading(false);
+            dispatch(failureSignUp(error.message));
             // this timeout will enable error message to be displayed for a period of time
-            setTimeout(() => {
-                setError(false);
-            }, 2500)
-        } finally {
-            setLoading(false);
+             setTimeout(() => {
+                dispatch(clearError());
+             }, 2500)
         }
+        dispatch(clearLoading());
     }
 
     // here when the user clicks the sign in btn because they alraedy have an account
