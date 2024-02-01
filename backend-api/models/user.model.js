@@ -15,7 +15,11 @@ const userSchema = Schema({
     password: {
         type: String,
         required: [true, 'Please provid a password']
-    }
+    },
+    avatar: {
+        type: String,
+        default: "https://www.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-600nw-2264922221.jpg"
+    },
 }, {timestamps: true});
 
 const User = model('User', userSchema);

@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { clearError, clearLoading, failureSignUp, startSignUp, successSignUp } from "../redux/user/userSlice";
+import { OAuth } from "./OAuth";
 
 Modal.setAppElement('#root') //this is for accessibiltiy purposes for screen readers
 
@@ -100,6 +101,7 @@ const SignUpModal = (props) => {
                         <button disabled={loading} type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
                             {loading ? 'Loading...': 'Sign up'}
                         </button>
+                        <OAuth />
                     </form>
                     <div className="mt-5">
                         <p>Have an account? <button onClick={handleSignInModal} className="text-green-700 cursor-pointer">Sign in</button></p>

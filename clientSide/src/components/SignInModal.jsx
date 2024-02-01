@@ -4,6 +4,7 @@ import { IoMdClose } from 'react-icons/io';
 import Modal from 'react-modal';
 import { useSelector, useDispatch } from "react-redux";
 import { startSignIn, successSignIn, failureSignIn, clearError, clearLoading } from '../redux/user/userSlice';
+import { OAuth } from './OAuth';
 
 
 Modal.setAppElement('#root'); //accessibility purposes
@@ -87,6 +88,7 @@ const SignInModal = (props) => {
                         <button disabled={loading} type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
                             {loading ? 'Loading...': 'sign in'}
                         </button>
+                        <OAuth/>
                     </form>
                     <div className="mt-5">
                         <p>Dont have an account? <button onClick={handleSignUpModal} className="text-green-700 cursor-pointer">Sign up</button></p>

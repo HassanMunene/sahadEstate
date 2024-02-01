@@ -48,3 +48,31 @@ export const signInUser = async (req, res, next) => {
         next(error);
     }
 }
+
+export const googleAuthenticate = async (req, res, next) => {
+    const {name, email, photo} = req.body
+    try {
+        const user = await User.findOne({ email: email })
+        // if user already exists sign the user in and give the a jwt token
+        if (user) {
+            const token = jwt.sign({id: user._id}, process.env.JWT_SECRET_KEY);
+            const {password: pass, ...restInfo} = user.toObject()
+            // save the token to the cookie
+            res.cookie('access_token', token, {httpOnly: true}).status(200).json(restInfo);
+        } else {
+            // if the user doesn't already exist the we sign them up and we have to
+            // generate a password for them because it is required already in model
+            const generatedPassword = Math.random().toString(36).slice(-8);
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(generatedPassword, salt);
+            const newUser = new User({username: name.split(" ").join("").toLowerCase(), email: email, password: hashedPassword, avatar: photo});
+            await newUser.save();
+            // the automatically sign in the user
+            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY);
+            const {password: pass, ...restInfo} = user.toObject();
+            res.cookie('access_token', token, {httpOnly: true}).status(200).json(restInfo);
+        }
+    } catch (error) {
+        next(error);
+    }
+}
