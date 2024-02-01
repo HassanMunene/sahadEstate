@@ -27,7 +27,7 @@ const SignInModal = (props) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         // handle submition of the details for authorisation
-        dispatch(startSignIn);
+        dispatch(startSignIn());
         try {
             const response = await axios.post('/api/auth/signin', JSON.stringify(formData), {
                 headers: {
