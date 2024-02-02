@@ -46,6 +46,9 @@ const App = () => {
       <Route path="/" element={<Home />}/>
       <Route path="/about" element={<About />} />
 
+      {/* profile route is inside PrivateRoute so that it can only accessible
+          when user is signed in.
+       */}
       <Route element={<PrivateRoute openSignIn={openSignInModal}/>}>
         <Route path="/profile" element={<Profile />}/>
       </Route>
