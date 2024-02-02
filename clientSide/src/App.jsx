@@ -19,11 +19,13 @@ const App = () => {
 
   // close the sing up modal
   const closeSignUpModal = (data) => {
-    if (data.success === true) {
-      setSignUpModalOpen(false);
-      setSignInModalOpen(true);
+    if (data) {
+      if (data.success === true) {
+        setSignUpModalOpen(false);
+        setSignInModalOpen(true);
+      }
     } else {
-      return setSignUpModalOpen(false);
+      setSignUpModalOpen(false);
     }
   };
 

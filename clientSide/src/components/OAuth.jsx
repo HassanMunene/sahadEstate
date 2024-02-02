@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { successSignIn } from '../redux/user/userSlice';
 
-export const OAuth = () => {
+export const OAuth = (props) => {
     const dispatch = useDispatch();
     const handleGoogleAuth = async () => {
         try {
@@ -32,6 +32,7 @@ export const OAuth = () => {
             console.log(response.data);
             // the use the dispatch to call the method from redux to store the user
             dispatch(successSignIn(data));
+            props.onGoogleAuthSuccess();
         } catch (error) {
             console.log('Error Authenticating with google:', error);
         }

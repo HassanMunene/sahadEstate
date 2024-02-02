@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { clearError, clearLoading, failureSignUp, startSignUp, successSignUp } from "../redux/user/userSlice";
 import { OAuth } from "./OAuth";
+import { useNavigate } from 'react-router-dom'
 
 Modal.setAppElement('#root') //this is for accessibiltiy purposes for screen readers
 
@@ -14,6 +15,7 @@ const SignUpModal = (props) => {
     const error = useSelector((state) => state.user.error);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // handle change of input elements as user enters details
     const handleChange = (event) => {
@@ -59,8 +61,15 @@ const SignUpModal = (props) => {
     // here when the user clicks the sign in btn because they alraedy have an account
     // this should handle it. it will call the openSignIn() props function back to parent
     const handleSignInModal = () => {
-        console.log('button clicked');
+        console.log('button clicked to open signin modal');
         props.openSignIn();
+    }
+
+    // handle google authentication success
+    const handleGoogleAuthSuccess = () => {
+        console.log('navigating to home page');
+        navigate('/');
+        props.onClose()
     }
 
     return (
@@ -101,7 +110,7 @@ const SignUpModal = (props) => {
                         <button disabled={loading} type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
                             {loading ? 'Loading...': 'Sign up'}
                         </button>
-                        <OAuth />
+                        <OAuth onGoogleAuthSuccess={handleGoogleAuthSuccess}/>
                     </form>
                     <div className="mt-5">
                         <p>Have an account? <button onClick={handleSignInModal} className="text-green-700 cursor-pointer">Sign in</button></p>
