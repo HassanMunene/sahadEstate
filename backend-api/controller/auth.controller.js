@@ -54,10 +54,13 @@ export const googleAuthenticate = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: email })
         // if user already exists sign the user in and give the a jwt token
+        // we just need to sign him in.
         if (user) {
             const token = jwt.sign({id: user._id}, process.env.JWT_SECRET_KEY);
+            //extract user info excludng the password for user
             const {password: pass, ...restInfo} = user.toObject()
-            // save the token to the cookie
+
+            // save the token to the cookie and send back the user info to client
             res.cookie('access_token', token, {httpOnly: true}).status(200).json(restInfo);
         } else {
             // if the user doesn't already exist the we sign them up and we have to
@@ -65,11 +68,15 @@ export const googleAuthenticate = async (req, res, next) => {
             const generatedPassword = Math.random().toString(36).slice(-8);
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(generatedPassword, salt);
-            const newUser = new User({username: name.split(" ").join("").toLowerCase(), email: email, password: hashedPassword, avatar: photo});
+            
+            //generate the name for username in db
+            const generateName = name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4);
+            const newUser = new User({username: generateName, email: email, password: hashedPassword, avatar: photo});
             await newUser.save();
-            // the automatically sign in the user
+
+            // the automatically sign in the user and provide a token for them
             const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY);
-            const {password: pass, ...restInfo} = user.toObject();
+            const {password: pass, ...restInfo} = newUser.toObject();
             res.cookie('access_token', token, {httpOnly: true}).status(200).json(restInfo);
         }
     } catch (error) {

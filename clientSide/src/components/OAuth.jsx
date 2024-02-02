@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { app } from '../firebase';
 import axios from 'axios';
-import { UseDispatch, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { successSignIn } from '../redux/user/userSlice';
 
 export const OAuth = () => {
@@ -15,12 +15,13 @@ export const OAuth = () => {
             const user = result.user;
             // we now only need to extract the information we need from the response
             // we get from google so that we can store the user in our database
+            
             const {displayName, email, photoURL} = user;
             const userData = {
                 name: displayName,
                 email: email,
                 photo: photoURL
-            }
+            };
             
             const response = await axios.post('/api/auth/google', JSON.stringify(userData), {
                 headers: {
@@ -28,10 +29,11 @@ export const OAuth = () => {
                 },
             });
             const data = await response.data;
+            console.log(response.data);
             // the use the dispatch to call the method from redux to store the user
             dispatch(successSignIn(data));
         } catch (error) {
-            console.log('An error occurred Authenticating with google:', error);
+            console.log('Error Authenticating with google:', error);
         }
     }
 
