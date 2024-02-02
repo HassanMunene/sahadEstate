@@ -24,9 +24,8 @@ const App = () => {
         setSignUpModalOpen(false);
         setSignInModalOpen(true);
       }
-    } else {
-      setSignUpModalOpen(false);
     }
+    setSignUpModalOpen(false);
   };
 
   // open sign in modal
