@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { useSelector, useDispatch } from "react-redux";
 import { startSignIn, successSignIn, failureSignIn, clearError, clearLoading } from '../redux/user/userSlice';
 import { OAuth } from './OAuth';
+import { useNavigate } from 'react-router-dom';
 
 
 Modal.setAppElement('#root'); //accessibility purposes
@@ -13,7 +14,9 @@ const SignInModal = (props) => {
     const loading = useSelector((state) => state.user.loading);
     const error = useSelector((state) => state.user.error);
     const [formData, setFormData] = useState({email: '', password: ''});
+
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         const inputElement = event.target;
@@ -57,6 +60,13 @@ const SignInModal = (props) => {
         props.openSignUp();
     }
 
+    // handle google authentication success
+    const handleGoogleAuthSuccess = () => {
+        console.log('navigating to home page');
+        navigate('/');
+        props.onClose()
+    }
+
     return (
         <Modal isOpen={props.isOpen} onRequestClose={props.onClose} contentLabel="Sign in modal" className="modal">
             <div className='bg-white w-full max-w-3xl h-screen rounded-md shadow-lg mx-auto p-8'>
@@ -88,7 +98,7 @@ const SignInModal = (props) => {
                         <button disabled={loading} type="submit" className="bg-slate-700 p-3 text-white uppercase rounded-lg hover:opacity-95 disabled:opacity-80">
                             {loading ? 'Loading...': 'sign in'}
                         </button>
-                        <OAuth/>
+                        <OAuth onGoogleAuthSuccess={handleGoogleAuthSuccess}/>
                     </form>
                     <div className="mt-5">
                         <p>Dont have an account? <button onClick={handleSignUpModal} className="text-green-700 cursor-pointer">Sign up</button></p>

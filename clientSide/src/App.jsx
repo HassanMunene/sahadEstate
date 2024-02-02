@@ -6,6 +6,7 @@ import Header from "./components/Header"
 import SignUpModal from "./components/SignUpModal";
 import { useState } from "react"
 import SignInModal from "./components/SignInModal"
+import { PrivateRoute } from "./components/PrivateRoute"
 
 const App = () => {
   const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
@@ -44,7 +45,11 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="/about" element={<About />} />
-      <Route path="/profile" element={<Profile />}/>
+
+      <Route element={<PrivateRoute openSignIn={openSignInModal}/>}>
+        <Route path="/profile" element={<Profile />}/>
+      </Route>
+  
     </Routes>
     <SignUpModal isOpen={isSignUpModalOpen} onClose={closeSignUpModal} openSignIn={openSignInModal}/>
     <SignInModal isOpen={isSignInModalOpen} onClose={closeSignInModal} openSignUp={openSignUpModal}/>
