@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 app.use('/api/auth', authRouter);
 
-app.use(cookieParser);
+app.use(cookieParser());
 app.use('/api/user', userRouter)
 
 app.use(errorMiddleware);
