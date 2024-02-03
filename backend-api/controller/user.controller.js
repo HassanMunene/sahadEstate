@@ -1,8 +1,7 @@
-const testUser = (req, res) => {
+export const testUser = (req, res) => {
     res.json({msg: 'Hello there mate we are testing'});
 }
 
-const signUpUser = (req, res) => {
-    res.json({msg: 'Signing user up'});
+export const updateUserInfo = (req, res, next) => {
+    res.json({msg: 'Yooo we wanna update'});
 }
-export default testUser;
