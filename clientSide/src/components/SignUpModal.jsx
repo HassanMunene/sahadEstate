@@ -36,7 +36,7 @@ const SignUpModal = (props) => {
         event.preventDefault();
         console.log(loading)
         dispatch(startSignUp());
-        console.log('after sign up', loading)
+        //console.log('after sign up', loading)
 
         try {
             const response = await axios.post('/api/auth/signup', JSON.stringify(formData), {

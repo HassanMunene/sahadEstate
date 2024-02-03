@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable }from 'firebase/storage'
 import { app } from "../firebase";
+import axios from "axios";
 
 const Profile = () => {
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -12,7 +13,6 @@ const Profile = () => {
     const [imagePercentage, setImagePercentage] = useState(0);
     const [fileUploadError, setFileUploadError] = useState(false);
     const [formData, setFormData] = useState({});
-    console.log(formData)
     // then we will use useEffect hook to upload the file to firebase storage
     useEffect(() => {
         if (file) {
@@ -43,10 +43,37 @@ const Profile = () => {
             }
         )
     }
+    const handleChange = (event) => {
+        //get the input element triggering the change
+        const inputElement = event.target
+        // set the form data with the new change. key and value
+        setFormData ((prevData) => {
+            const newData = {...formData};
+            newData[inputElement.name] = inputElement.value;
+            return newData;
+        })
+    }
+    const handleSubmit = async (event) => {
+        // prevent reloading of the page which is a default behaviour
+        event.preventDefault();
+        
+        try {
+            const response = await axios.patch(`/api/user/update/${currentUser._id}`, JSON.stringify(formData), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
         <div className="px-6 max-w-lg mx-auto">
             <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-            <form className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <input onChange={(event) => setFile(event.target.files[0])} type="file" ref={fileRef} hidden accept="image/*"/>
                 <img onClick={()=>fileRef.current.click()} src={formData.avatar || currentUser.avatar} alt="profile" className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"/>
                 <p className="self-center">
@@ -62,10 +89,10 @@ const Profile = () => {
                                     : ""
                     }
                 </p>
-                <input type="text" name="username" id="username" placeholder="username" className="border p-3 rounded-lg" />
-                <input type="email" name="email" id="email" placeholder="email" className="border p-3 rounded-lg" />
-                <input type="text" name="password" id="password" placeholder="password" className="border p-3 rounded-lg" />
-                <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">update</button>
+                <input type="text" name="username" id="username" defaultValue={currentUser.username} onChange={handleChange} placeholder="username" className="border p-3 rounded-lg" />
+                <input type="email" name="email" id="email" defaultValue={currentUser.email} onChange={handleChange} placeholder="email" className="border p-3 rounded-lg" />
+                <input type="text" name="password" id="password" onChange={handleChange} placeholder="password" className="border p-3 rounded-lg" />
+                <button type="submit" className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">update</button>
             </form>
             <div className="flex justify-between mt-5">
                 <span className="text-red-700 cursor-pointer">Delete account</span>
