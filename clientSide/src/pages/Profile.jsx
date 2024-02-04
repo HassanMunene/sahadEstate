@@ -14,6 +14,8 @@ import {
     failureSignOut, 
     successSignOut 
 } from "../redux/user/userSlice";
+import { Link }from 'react-router-dom';
+
 
 const Profile = () => {
     const currentUser = useSelector((state) => state.user.currentUser);
@@ -147,6 +149,9 @@ const Profile = () => {
                 <button disabled={loading} type="submit" className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
                     {loading ? 'loading...': 'update'}
                 </button>
+                <Link to={"/create-listing"} className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95">
+                    create listing
+                </Link>
             </form>
             <div className="flex justify-between mt-5">
                 <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete account</span>
