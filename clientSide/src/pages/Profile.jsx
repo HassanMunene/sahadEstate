@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable }from 'firebase/storage'
 import { app } from "../firebase";
 import axios from "axios";
+import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice";
 
 const Profile = () => {
     const currentUser = useSelector((state) => state.user.currentUser);
+    const loading = useSelector((state) => state.user.loading);
+    const dispatch = useDispatch();
     const fileRef = useRef(null);
     // set a variable that will hold the file uploaded using useState
     const [file, setFile] = useState(undefined);
@@ -13,6 +16,7 @@ const Profile = () => {
     const [imagePercentage, setImagePercentage] = useState(0);
     const [fileUploadError, setFileUploadError] = useState(false);
     const [formData, setFormData] = useState({});
+    const [updateSuccess, setUpdateSuccess] = useState(false);
     // then we will use useEffect hook to upload the file to firebase storage
     useEffect(() => {
         if (file) {
@@ -58,14 +62,25 @@ const Profile = () => {
         event.preventDefault();
         
         try {
+            dispatch(updateUserStart());
             const response = await axios.patch(`/api/user/update/${currentUser._id}`, JSON.stringify(formData), {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
             console.log(response.data);
+            if(response.data.success === false) {
+                dispatch(updateUserFailure(data.message));
+                return;
+            }
+            dispatch(updateUserSuccess(response.data.user));
+            setUpdateSuccess(true)
+            setTimeout(()=> {
+                setUpdateSuccess(false);
+            }, 2000)
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
+            dispatch(updateUserFailure(error.message));
         }
     }
 
@@ -91,12 +106,17 @@ const Profile = () => {
                 </p>
                 <input type="text" name="username" id="username" defaultValue={currentUser.username} onChange={handleChange} placeholder="username" className="border p-3 rounded-lg" />
                 <input type="email" name="email" id="email" defaultValue={currentUser.email} onChange={handleChange} placeholder="email" className="border p-3 rounded-lg" />
-                <input type="text" name="password" id="password" onChange={handleChange} placeholder="password" className="border p-3 rounded-lg" />
-                <button type="submit" className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">update</button>
+                <input type="password" name="password" id="password" onChange={handleChange} placeholder="password" className="border p-3 rounded-lg" />
+                <button disabled={loading} type="submit" className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+                    {loading ? 'loading...': 'update'}
+                </button>
             </form>
             <div className="flex justify-between mt-5">
                 <span className="text-red-700 cursor-pointer">Delete account</span>
                 <span className="text-red-700 cursor-pointer">Sign out</span>
+            </div>
+            <div className="uppercase text-green-700">
+                {updateSuccess ? 'updated successfully': ''}
             </div>
         </div>
     )

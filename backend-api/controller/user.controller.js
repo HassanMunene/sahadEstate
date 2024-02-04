@@ -9,6 +9,7 @@ export const testUser = (req, res) => {
 export const updateUserInfo = async (req, res, next) => {
     //console.log(req.user.id);
     if (req.user.id != req.params.id) {
+        console.log('the id in params does not match the one in token');
         return next(errorFunction(401, 'You can only update your own account'));
     }
     try {
@@ -26,8 +27,9 @@ export const updateUserInfo = async (req, res, next) => {
         }, {new: true})
 
         const {password, ...restInfo} = updatedUser.toObject();
-        res.status(200).json({msg: 'Successfully updated the user', restInfo})
+        res.status(200).json({success: true, user: restInfo})
     } catch (error) {
+        console.log(error);
         next(error);
     }
 }
