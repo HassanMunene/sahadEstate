@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import About from "./pages/About"
 import Profile from "./pages/Profile"
+import CreateListing from "./pages/CreateListing"
 import Header from "./components/Header"
 import SignUpModal from "./components/SignUpModal";
 import { useState } from "react"
@@ -51,8 +52,8 @@ const App = () => {
        */}
       <Route element={<PrivateRoute openSignIn={openSignInModal}/>}>
         <Route path="/profile" element={<Profile />}/>
+        <Route path="/create-listing" element={<CreateListing/>}></Route>
       </Route>
-  
     </Routes>
     <SignUpModal isOpen={isSignUpModalOpen} onClose={closeSignUpModal} openSignIn={openSignInModal}/>
     <SignInModal isOpen={isSignInModalOpen} onClose={closeSignInModal} openSignUp={openSignUpModal}/>
