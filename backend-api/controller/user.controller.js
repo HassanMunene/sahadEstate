@@ -8,7 +8,7 @@ export const testUser = (req, res) => {
 
 export const updateUserInfo = async (req, res, next) => {
     //console.log(req.user.id);
-    if (req.user.id != req.params.id) {
+    if (req.user.id !== req.params.id) {
         console.log('the id in params does not match the one in token');
         return next(errorFunction(401, 'You can only update your own account'));
     }
@@ -30,6 +30,19 @@ export const updateUserInfo = async (req, res, next) => {
         res.status(200).json({success: true, user: restInfo})
     } catch (error) {
         console.log(error);
+        next(error);
+    }
+}
+
+export const deleteUser = async (req, res, next) => {
+    if (req.user.id !== req.params.id) {
+        return next(errorFunction(401, 'you can only delete your own account'));
+    }
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.clearCookie('access_token');
+        res.status(200).json({status: 'user successfully deleted'});
+    } catch (error) {
         next(error);
     }
 }
