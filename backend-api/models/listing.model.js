@@ -1,4 +1,4 @@
-import mongoose, { Schema, trusted } from "mongoose";
+import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
@@ -47,7 +47,7 @@ const listingSchema = Schema({
         type: Boolean,
         required: true
     },
-    imageURL: {
+    imageUrls: {
         type: Array,
         required: true
     },
