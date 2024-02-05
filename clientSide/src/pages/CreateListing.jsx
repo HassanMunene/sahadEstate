@@ -8,6 +8,7 @@ const CreateListing = () => {
     const [formData, setFormData] = useState({
         imageUrls: [],
     });
+    console.log(formData);
     const [imageUploadError, setImageUploadError] = useState(null);
     const [uploading, setUploading] = useState(false);
 
@@ -24,7 +25,7 @@ const CreateListing = () => {
             //console.log(promises);
             Promise.all(promises)
             .then((urls) => {
-                setFormData({...formData, imageUrls: urls});
+                setFormData({...formData, imageUrls: formData.imageUrls.concat(urls)});
                 setImageUploadError(false);
                 setUploading(false);
             })
