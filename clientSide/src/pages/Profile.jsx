@@ -29,6 +29,9 @@ const Profile = () => {
     const [fileUploadError, setFileUploadError] = useState(false);
     const [formData, setFormData] = useState({});
     const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [userListings, setUserListings] = useState([]);
+    const [showListingsError, setShowListingsError] = useState(false);
+
     // then we will use useEffect hook to upload the file to firebase storage
     useEffect(() => {
         if (file) {
@@ -123,6 +126,20 @@ const Profile = () => {
             dispatch(failureSignOut(error.message));
         }
     }
+    const handleShowListings = async () => {
+        try {
+            setShowListingsError(false);
+            const response = await axios.get(`/api/user/listings/${currentUser._id}`);
+            if (response.data.success === false) {
+                setShowListingsError(true);
+                return
+            }
+            //console.log(response.data);
+            setUserListings(response.data);
+        } catch (error) {
+            setShowListingsError(true);
+        }
+    }
 
     return (
         <div className="px-6 max-w-lg mx-auto">
@@ -160,6 +177,32 @@ const Profile = () => {
             <div className="uppercase text-green-700">
                 {updateSuccess ? 'updated successfully': ''}
             </div>
+            <button onClick={handleShowListings} className="text-green-700 w-full">
+                show listings
+            </button>
+            <p>
+                {
+                    showListingsError ? 'An error occurred showing listings' : ''
+                }
+            </p>
+            {userListings && userListings.length > 0 && 
+            userListings.map((listing) => {
+                return (
+                    <div key={listing._id} className="border rounded-lg p-3 flex justify-between items-center gap-4 mt-7">
+                        <Link to={`/listing/${listing._id}`}>
+                            <img src={listing.imageUrls[0]} alt="cover image" className="w-16 h-16 object-contain"/>
+                        </Link>
+                        <Link to={`/listing/${listing._id}`} className="text-slate-700 font-semibold hover:underline truncate flex-1">
+                            <p>{listing.name}</p>
+                        </Link>
+                        <div className="flex flex-col items-center">
+                            <button className="text-red-700 uppercase">Delete</button>
+                            <button className="text-green-700 uppercase">Edit</button>
+                        </div>
+                    </div>
+                )
+            })
+            }
         </div>
     )
 }

@@ -54,7 +54,7 @@ const App = () => {
       <Route element={<PrivateRoute openSignIn={openSignInModal}/>}>
         <Route path="/profile" element={<Profile />}/>
         <Route path="/create-listing" element={<CreateListing/>}/>
-        <Route path="/listing" element={<Listing/>}/>
+        <Route path="/listing/:id" element={<Listing/>}/>
       </Route>
     </Routes>
     <SignUpModal isOpen={isSignUpModalOpen} onClose={closeSignUpModal} openSignIn={openSignInModal}/>
