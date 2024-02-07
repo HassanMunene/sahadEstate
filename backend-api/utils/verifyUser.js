@@ -2,7 +2,7 @@ import errorFunction from "./error.js"
 import jwt from 'jsonwebtoken'
 
 export const verifyToken = (req, res, next) => {
-    const token = req.cookies.access_token
+    const token = req.cookies.access_token;
     if(!token) {
         console.log('there was no token from the request');
         return next(errorFunction(401, 'Not authorised to do this action'));

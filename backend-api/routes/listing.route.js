@@ -6,6 +6,6 @@ const listingRouter = express.Router();
 
 listingRouter.route('/testing').get(verifyToken, testingListing);
 listingRouter.route('/create_listing').post(verifyToken, createListing);
-listingRouter.route('/:id').delete(verifyToken, deleteListing)
+listingRouter.route('/delete/:id').delete(verifyToken, deleteListing)
 
 export default listingRouter;
