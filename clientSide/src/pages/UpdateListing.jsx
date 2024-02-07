@@ -33,7 +33,12 @@ const UpdateListing = () => {
     useEffect(() => {
         const fetchListing = async () => {
             const listingId = params.listingId;
-            console.log(listingId);
+            const response = await axios.get(`/api/listing/getListing/${listingId}`);
+            setFormData(response.data);
+            if (response.data.success === false) {
+                console.log(response.data.message);
+                return;
+            }
         };
         fetchListing();
     }, [])
@@ -129,7 +134,7 @@ const UpdateListing = () => {
             setLoading(true);
             setError(false);
 
-            const response = await axios.post('/api/listing/create_listing', JSON.stringify({...formData, userRef: currentUser._id}), {
+            const response = await axios.post(`/api/listing/update/${params.listingId}`, JSON.stringify({...formData, userRef: currentUser._id}), {
                 headers: {
                     'Content-Type': 'application/json'
                 },
