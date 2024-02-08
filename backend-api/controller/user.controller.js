@@ -61,3 +61,14 @@ export const showUserListings = async (req, res, next) => {
         next(errorFunction(401, 'you can only view your own listings'))
     }
 }
+
+export const getUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        const {password: pass, ...restInfo} = user.toObject();
+        res.status(200).json(restInfo);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
