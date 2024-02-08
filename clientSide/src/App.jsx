@@ -48,6 +48,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="/about" element={<About />} />
+      <Route path="/listing/:listingId" element={<Listing/>}/>
 
       {/* profile route is inside PrivateRoute so that it can only accessible
           when user is signed in.
@@ -55,7 +56,6 @@ const App = () => {
       <Route element={<PrivateRoute openSignIn={openSignInModal}/>}>
         <Route path="/profile" element={<Profile />}/>
         <Route path="/create-listing" element={<CreateListing/>}/>
-        <Route path="/listing/:id" element={<Listing/>}/>
         <Route path="/update-listing/:listingId" element={<UpdateListing/>}/>
       </Route>
     </Routes>
