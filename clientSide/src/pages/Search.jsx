@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from  'axios';
+import ListingCard from "../components/ListingCard";
 
 const Search = () => {
     const navigate = useNavigate();
@@ -48,8 +49,8 @@ const Search = () => {
                 console.log(response.data.message)
                 return;
             }
-            console.log(response.data);
-            setListings(response.data);
+            const responseData = response.data;
+            setListings(responseData);
             console.log(listings)
             setLoading(false)
         }
@@ -182,8 +183,23 @@ const Search = () => {
                     </div>
                 </form>
             </div>
-            <div className="listingsSide">
+            <div className="listingsSide flex-1">
                 <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 py-7">Listing results</h1>
+                <div className="p-7">
+                    {!loading && listings.length === 0 && (
+                        <p className="text-xl text-slate-700">No listing found!</p>
+                    )}
+                    {loading && (
+                        <p className="text-xl text-slate-700 text-center">Loading...</p>
+                    )}
+                    {
+                        !loading && listings && listings.map((listing) => {
+                            return (
+                                <ListingCard key={listing._id} listing={listing} />
+                            )
+                        })
+                    }
+                </div>
             </div>
         </div>
     )
