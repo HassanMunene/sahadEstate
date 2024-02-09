@@ -24,7 +24,8 @@ const Listing = () => {
             try {
                 setLoading(true);
                 const response = await axios.get(`/api/listing/getListing/${params.listingId}`);
-                //console.log(response.data)
+                debugger
+                //console.log(response.data)s
                 if(response.data.success === false) {
                     console.log(response.data.message);
                     setLoading(false);
