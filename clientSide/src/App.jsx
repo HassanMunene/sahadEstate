@@ -2,9 +2,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import About from "./pages/About"
 import Profile from "./pages/Profile"
-import CreateListing from "./pages/CreateListing"
-import Header from "./components/Header"
 import Listing from "./pages/Listing"
+import CreateListing from "./pages/CreateListing"
+import Search from "./pages/Search"
+import Header from "./components/Header"
 import SignUpModal from "./components/SignUpModal";
 import { useState } from "react"
 import SignInModal from "./components/SignInModal"
@@ -49,15 +50,12 @@ const App = () => {
       <Route path="/" element={<Home />}/>
       <Route path="/about" element={<About />} />
       <Route path="/listing/:listingId" element={<Listing/>}/>
-
-      {/* profile route is inside PrivateRoute so that it can only accessible
-          when user is signed in.
-       */}
       <Route element={<PrivateRoute openSignIn={openSignInModal}/>}>
         <Route path="/profile" element={<Profile />}/>
         <Route path="/create-listing" element={<CreateListing/>}/>
         <Route path="/update-listing/:listingId" element={<UpdateListing/>}/>
       </Route>
+      <Route path="/search" element={<Search/>}/>
     </Routes>
     <SignUpModal isOpen={isSignUpModalOpen} onClose={closeSignUpModal} openSignIn={openSignInModal}/>
     <SignInModal isOpen={isSignInModalOpen} onClose={closeSignInModal} openSignUp={openSignUpModal}/>
